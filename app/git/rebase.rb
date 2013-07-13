@@ -1,6 +1,6 @@
 module Git
   #TODO: un-hardcode
-  PROJECT_PATH = "/Users/dan2552/projects/dummy"
+  PROJECT_PATH = "/Users/dan2552/projects/dummy/"
 
   class Rebase
 
@@ -34,12 +34,26 @@ module Git
       finish
     end
 
+    def reword(commit, new_message)
+      start [commit]
+      equivalent_commit(commit).action = "r"
+      finish
+      wait_for_lock
+      write_to_rebase_file new_message
+    end
+
     def self.abort
       `cd #{Git::PROJECT_PATH} && git rebase --abort`
       File.delete('/tmp/rebaseface.lock')
     end
 
     private
+
+    def write_to_rebase_file contents
+      puts "writing to #{path}"
+      File.open(path, 'w') { |f| f.write(contents) }
+      File.delete('/tmp/rebaseface.lock')
+    end
 
     def last_commit
       sorted_commits.last
@@ -97,12 +111,11 @@ module Git
       task.setLaunchPath("/usr/local/bin/git")
       task.setArguments(["rebase", "--interactive", "HEAD~#{distance}"])
       task.setCurrentDirectoryPath(Git::PROJECT_PATH)
-      task.environment = { "GIT_SEQUENCE_EDITOR" => "'/Users/dan2552/projects/rebase-face/face.ruby'" }
+      task.environment = { "GIT_SEQUENCE_EDITOR" => "'/Users/dan2552/projects/rebase-face/face.ruby'", "EDITOR" => "'/Users/dan2552/projects/rebase-face/face.ruby'" }
       task.launch
 
       wait_for_lock
 
-      @path = `cat /tmp/rebaseface.lock`
       read_commits
     end
 
@@ -111,15 +124,9 @@ module Git
       end
     end
 
-    def finish
-      write_commits
-      puts `cat #{@path}`
-      File.delete('/tmp/rebaseface.lock')
-    end
-
     def read_commits
       order = 0
-      File.read(@path).each_line("\n") do |l|
+      File.read(path).each_line("\n") do |l|
         order += 1
         if l.strip.start_with? "pick"
           split = l.split(" ", 3)
@@ -141,12 +148,18 @@ module Git
       commits.sort { |a,b| a.position.to_f <=> b.position.to_f }
     end
 
-    def write_commits
+    def finish
+      puts "writing commits"
       contents = sorted_commits.map { |commit|
         "#{commit.action} #{commit.sha} #{commit.name}"
       }.join("\n")
+      write_to_rebase_file contents
+    end
 
-      File.open(@path, 'w') { |f| f.write(contents) }
+    def path
+      path = `cat /tmp/rebaseface.lock`
+      path = "#{PROJECT_PATH}#{path}" unless path.start_with?(PROJECT_PATH)
+      path
     end
 
   end
