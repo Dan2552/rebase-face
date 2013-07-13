@@ -54,6 +54,15 @@ module Git
       finish
     end
 
+    def squash(commit, target:other_commit, message:message)
+      start [commit, other_commit]
+      move commit, after(other_commit)
+      set_action(commit, "s")
+      finish
+      wait_for_lock
+      write_to_rebase_file message
+    end
+
     private
 
     def set_action(commit, action)
