@@ -3,7 +3,7 @@ module Git
     include MotionModel::Model
     include MotionModel::ArrayModelAdapter # <== Here!
 
-    columns :sha, :name, :position
+    columns :sha, :name, :position, :action
 
     def before? commit
       position > commit.position

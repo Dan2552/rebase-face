@@ -10,6 +10,12 @@ module Git
       finish
     end
 
+    def remove(commit)
+      start [commit]
+      equivalent_commit(commit).action = "#"
+      finish
+    end
+
     def self.abort
       `cd #{Git::PROJECT_PATH} && git rebase --abort`
       File.delete('/tmp/rebaseface.lock')
@@ -82,6 +88,7 @@ module Git
         if l.strip.start_with? "pick"
           split = l.split(" ", 3)
           commits << Git::Commit.new(
+            action: split[0],
             sha: split[1],
             name: split[2],
             position: order
@@ -100,7 +107,7 @@ module Git
 
     def write_commits
       contents = sorted_commits.map { |commit|
-        "pick #{commit.sha} #{commit.name}"
+        "#{commit.action} #{commit.sha} #{commit.name}"
       }.join("\n")
 
       File.open(@path, 'w') { |f| f.write(contents) }
