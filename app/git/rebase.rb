@@ -10,9 +10,27 @@ module Git
       finish
     end
 
+    def reorder(commit, after:other_commit)
+      start [commit, other_commit]
+      move commit, after(other_commit)
+      finish
+    end
+
     def remove(commit)
       start [commit]
       equivalent_commit(commit).action = "#"
+      finish
+    end
+
+    def pick(commit, before:other_commit)
+      start [other_commit]
+      add(commit, before(other_commit))
+      finish
+    end
+
+    def pick(commit)
+      start
+      add(commit, after(last_commit))
       finish
     end
 
@@ -23,12 +41,29 @@ module Git
 
     private
 
+    def last_commit
+      sorted_commits.last
+    end
+
+    def add(commit, order)
+      commits << Git::Commit.new(
+        action: "pick",
+        sha: commit.sha,
+        name: commit.name,
+        position: order
+      )
+    end
+
     def equivalent_commit(commit)
       @commits.select { |c| c.sha == commit.sha }.first
     end
 
     def move(commit, position)
       equivalent_commit(commit).position = position
+    end
+
+    def after(commit)
+      equivalent_commit(commit).position.to_i + 0.5
     end
 
     def before(commit)
@@ -51,11 +86,12 @@ module Git
       earliest_commit
     end
 
-    def start(commits)
+    def start(commits=nil)
       raise "Rebase already in progress" if rebase_in_progress?
       #TODO: not relying on direct paths, project directory, relative path
 
-      distance = find_earliest_commit(commits).position
+
+      distance = commits ? find_earliest_commit(commits).position : 1
 
       task = NSTask.new
       task.setLaunchPath("/usr/local/bin/git")
