@@ -18,7 +18,7 @@ module Git
 
     def remove(commit)
       start [commit]
-      equivalent_commit(commit).action = "#"
+      set_action(commit, "#")
       finish
     end
 
@@ -36,7 +36,7 @@ module Git
 
     def reword(commit, new_message)
       start [commit]
-      equivalent_commit(commit).action = "r"
+      set_action(commit, "r")
       finish
       wait_for_lock
       write_to_rebase_file new_message
@@ -47,7 +47,18 @@ module Git
       File.delete('/tmp/rebaseface.lock')
     end
 
+    def fixup(commit, target:other_commit)
+      start [commit, other_commit]
+      move commit, after(other_commit)
+      set_action(commit, "f")
+      finish
+    end
+
     private
+
+    def set_action(commit, action)
+      equivalent_commit(commit).action = action
+    end
 
     def write_to_rebase_file contents
       puts "writing to #{path}"
