@@ -5,10 +5,6 @@ class AppDelegate
   end
 
   def buildWindow
-    @controller = MainController.new
-    @mainWindow = @controller.window
-
-    @mainWindow.title = NSBundle.mainBundle.infoDictionary['CFBundleName']
-    @mainWindow.orderFrontRegardless
+    @controller = MainWindowController.open
   end
 end
