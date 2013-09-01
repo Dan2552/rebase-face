@@ -278,11 +278,6 @@
 @end
 
 
-@implementation CommitNode
-
-@end
-
-
 @implementation MainWindowController
 
 @end
@@ -308,6 +303,11 @@
 @end
 
 
+@implementation NSTableView
+
+@end
+
+
 @implementation NSTextField
 
 @end
@@ -318,7 +318,7 @@
 @end
 
 
-@implementation TableDelegateProxy
+@implementation CommitNode
 
 @end
 
@@ -329,6 +329,11 @@
 
 
 @implementation NodePopover
+
+@end
+
+
+@implementation TableDelegateProxy
 
 @end
 

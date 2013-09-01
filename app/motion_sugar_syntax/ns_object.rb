@@ -31,6 +31,12 @@ class NSObject
     puts "<<<<<<<<<<<<<<<<<<<<<<<<"
   end
 
+  def try *args
+    self.send(*args)
+  rescue
+    nil
+  end
+
   private
 
   def run_method(meth, *args)

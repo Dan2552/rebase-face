@@ -830,20 +830,6 @@
 @end
 
 
-@interface CommitNode: NSView
-
-
-
-
-
--(IBAction) reuse;
--(IBAction) commit;
--(IBAction) popover;
--(IBAction) node_view;
-
-@end
-
-
 @interface MainWindowController: BaseWindowController
 
 @property IBOutlet id working_branches;
@@ -851,6 +837,7 @@
 @property IBOutlet id popover_view;
 @property IBOutlet id reusable_horizontal_node;
 @property IBOutlet id reusable_vertical_node;
+@property IBOutlet id graph_column;
 
 
 
@@ -910,6 +897,17 @@
 @end
 
 
+@interface NSTableView
+
+
+
+
+
+-(IBAction) make_view:(id) id;
+
+@end
+
+
 @interface NSTextField
 
 
@@ -928,18 +926,22 @@
 
 
 -(IBAction) find:(id) identifier;
+-(IBAction) auto_arrange_subviews;
+-(IBAction) left;
 
 @end
 
 
-@interface TableDelegateProxy
+@interface CommitNode: NSView
 
 
 
 
 
--(IBAction) numberOfRowsInTableView:(id) table_view;
--(IBAction) connect_delegation;
+-(IBAction) reuse:(id) options;
+-(IBAction) commit;
+-(IBAction) popover;
+-(IBAction) node_view;
 
 @end
 
@@ -963,6 +965,18 @@
 
 -(IBAction) initialize:(id) popover_instance;
 -(IBAction) show:(id) sender;
+
+@end
+
+
+@interface TableDelegateProxy
+
+
+
+
+
+-(IBAction) numberOfRowsInTableView:(id) table_view;
+-(IBAction) connect_delegation;
 
 @end
 
