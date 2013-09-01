@@ -1,7 +1,7 @@
 module Git
   class Commit
     include MotionModel::Model
-    include MotionModel::ArrayModelAdapter # <== Here!
+    include MotionModel::ArrayModelAdapter
 
     columns :sha, :name, :position, :action
 
@@ -17,20 +17,35 @@ module Git
       Git::Commit.find{ |c| c.sha == sha }.first
     end
 
-    def self.read_commits
+    def self.range(start, finish)
+      from("#{start}..#{finish}")
+    end
+
+    def self.from(reference=:master)
+      reference = sanitize_name(reference)
+      commits = []
+
       index = 0
-      `cd #{Git::PROJECT_PATH} && git log --oneline`.each_line do |line|
+      `cd #{Git::PROJECT_PATH} && git log #{reference} --oneline`.each_line do |line|
         split = line.strip.split(" ", 2)
 
-        Git::Commit.create(
+        c = Git::Commit.new(
           sha: split[0],
           name: split[1],
           position: index + 1
         )
 
+        commits << c
+
         index += 1
       end
-      true
+      commits
+    end
+
+    private
+
+    def self.sanitize_name name
+      name.gsub(" ", "-")
     end
 
   end

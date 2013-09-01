@@ -26,18 +26,6 @@ class BaseWindowController < NSWindowController
     hash_settings["#{name}_click_#{n}"] = action_sym
   end
 
-  def tableView table_view, viewForTableColumn:tableColumn, row:row
-    table_cell(tableColumn, row)
-  end
-
-  def table_cell(column, row)
-
-  end
-
-  def tableViewSelectionDidChange aNotification
-    puts "hello?"
-  end
-
   private
 
   def self.hash_settings
@@ -53,13 +41,9 @@ class BaseWindowController < NSWindowController
     cls.hash_settings.each do |key, value|
       button_id = key.split("#{cls.name}_click_").last.to_i
       if button_id > 0
-        view = window.contentView.viewWithTag button_id
-        if view.class <= NSControl
-          puts "registering #{button_id} for action: #{value.to_s}"
-          view.setAction(value.to_s)
-          view.setTarget(self)
-        else
-          puts "invalid view: #{view}"
+        view = window.contentView.viewWithTag(button_id)
+        if view.respond_to? :register_click_action
+          view.register_click_action(self, value)
         end
       end
     end

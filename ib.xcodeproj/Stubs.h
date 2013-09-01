@@ -800,35 +800,65 @@
 
 -(IBAction) windowDidLoad;
 -(IBAction) window_did_load;
--(IBAction) table_cell;
--(IBAction) tableViewSelectionDidChange:(id) aNotification;
 -(IBAction) register_buttons;
 
 @end
 
 
-@interface RebaseIO
+@interface Rebase
 
 
 
 
 
--(IBAction) initialize;
--(IBAction) read;
+-(IBAction) remove:(id) commit;
+-(IBAction) pick:(id) commit;
+-(IBAction) write_to_rebase_file:(id) contents;
+-(IBAction) last_commit;
+-(IBAction) equivalent_commit:(id) commit;
+-(IBAction) after:(id) commit;
+-(IBAction) before:(id) commit;
+-(IBAction) find_earliest_commit:(id) commits;
+-(IBAction) start:(id) commits;
+-(IBAction) wait_for_lock;
+-(IBAction) read_commits;
+-(IBAction) commits;
+-(IBAction) sorted_commits;
+-(IBAction) finish;
+-(IBAction) path;
+
+@end
+
+
+@interface CommitNode: NSView
+
+
+
+
+
+-(IBAction) reuse;
+-(IBAction) commit;
+-(IBAction) popover;
+-(IBAction) node_view;
 
 @end
 
 
 @interface MainWindowController: BaseWindowController
 
-@property IBOutlet id table_view;
+@property IBOutlet id working_branches;
+@property IBOutlet id graph;
+@property IBOutlet id popover_view;
+@property IBOutlet id reusable_horizontal_node;
+@property IBOutlet id reusable_vertical_node;
 
 
 
 -(IBAction) window_did_load;
--(IBAction) go;
--(IBAction) finish;
--(IBAction) numberOfRowsInTableView:(id) table_view;
+-(IBAction) graph_row_count;
+-(IBAction) graph_cell:(id) row;
+-(IBAction) working_branches_row_count;
+-(IBAction) working_branches_cell:(id) row;
 
 @end
 
@@ -840,6 +870,99 @@
 
 
 -(IBAction) buildMenu;
+
+@end
+
+
+@interface Array
+
+
+
+
+
+-(IBAction) to_rect;
+
+@end
+
+
+@interface NSObject
+
+
+
+
+
+-(IBAction) strong:(id) a;
+-(IBAction) clear_puts:(id) msg;
+-(IBAction) to_obj_c:(id) meth;
+
+@end
+
+
+@interface NSPopover
+
+
+
+
+
+-(IBAction) view:(id) identifier;
+-(IBAction) show_by:(id) view;
+
+@end
+
+
+@interface NSTextField
+
+
+
+
+
+-(IBAction) text;
+
+@end
+
+
+@interface NSView
+
+
+
+
+
+-(IBAction) find:(id) identifier;
+
+@end
+
+
+@interface TableDelegateProxy
+
+
+
+
+
+-(IBAction) numberOfRowsInTableView:(id) table_view;
+-(IBAction) connect_delegation;
+
+@end
+
+
+@interface NodeButton: NSButton
+
+
+
+
+
+
+
+@end
+
+
+@interface NodePopover
+
+
+
+
+
+-(IBAction) initialize:(id) popover_instance;
+-(IBAction) show:(id) sender;
 
 @end
 

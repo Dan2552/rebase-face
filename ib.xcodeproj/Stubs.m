@@ -273,7 +273,12 @@
 @end
 
 
-@implementation RebaseIO
+@implementation Rebase
+
+@end
+
+
+@implementation CommitNode
 
 @end
 
@@ -284,6 +289,46 @@
 
 
 @implementation AppDelegate
+
+@end
+
+
+@implementation Array
+
+@end
+
+
+@implementation NSObject
+
+@end
+
+
+@implementation NSPopover
+
+@end
+
+
+@implementation NSTextField
+
+@end
+
+
+@implementation NSView
+
+@end
+
+
+@implementation TableDelegateProxy
+
+@end
+
+
+@implementation NodeButton
+
+@end
+
+
+@implementation NodePopover
 
 @end
 

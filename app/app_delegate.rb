@@ -1,6 +1,5 @@
 class AppDelegate
   def applicationDidFinishLaunching(notification)
-    Git::Commit.read_commits
     buildMenu
     buildWindow
   end

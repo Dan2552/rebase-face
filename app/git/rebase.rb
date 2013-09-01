@@ -1,6 +1,6 @@
 module Git
   #TODO: un-hardcode
-  PROJECT_PATH = "/Users/dan2552/projects/dummy/"
+  PROJECT_PATH = "/Users/dan2552/projects/timereporter/"
 
   class Rebase
 

@@ -1,40 +1,45 @@
 class MainWindowController < BaseWindowController
   extend IB
-  # stylesheet :main_window
-
-  # layout do
-  #   subview NSButton, :go_button, action: 'go:', target: self
-  #   subview NSButton, :finish_button, action: 'finish:', target: self
-  #   @table = subview NSTableView, :table_view, delegate: self, dataSource: self
-  # end
 
   xib :main_window
-  click 1, :go
-  click 2, :finish
-  outlet :table_view
+
+  outlet :working_branches
+  outlet :graph
+  outlet :popover_view
+  outlet :reusable_horizontal_node
+  outlet :reusable_vertical_node
+
+  attr_accessor :node_popover
 
   def window_did_load
-    table_view.delegate = self
-    table_view.dataSource = self
+    self.node_popover = NodePopover.new(popover_view)
+
+    @master = Git::Commit.from(:master)
+
+    strong TableDelegateProxy.new(self, working_branches, :working_branches)
+    strong TableDelegateProxy.new(self, graph, :graph)
   end
 
-  def go
-    Git::RebaseIO.start_rebase
+  def graph_row_count
+    @master.count
   end
 
-  def finish
-    Git::RebaseIO.end_rebase
+  def graph_cell(row)
+    reusable_vertical_node.reuse(
+      commit: @master[row],
+      popover: node_popover
+    )
   end
 
-  def numberOfRowsInTableView table_view
-    Git::Commit.all.count
+  def working_branches_row_count
+    5
   end
 
-  def table_cell(column, row)
-    cell = table_view.make_view("CellView", self)
-    textfield = cell.subviews.first
-    commit = Git::Commit.all[row]
-    textfield.stringValue = "#{commit.sha} - #{commit.name}"
+  def working_branches_cell(row)
+    cell = working_branches.make_view(:working_branch, self)
+
+    textfield = cell.subviews.first.subviews.first
+    textfield.text = "test"
     cell
   end
 
