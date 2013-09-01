@@ -834,7 +834,7 @@
 
 @property IBOutlet id working_branches;
 @property IBOutlet id graph;
-@property IBOutlet id popover_view;
+@property IBOutlet id node_popover;
 @property IBOutlet id reusable_horizontal_node;
 @property IBOutlet id reusable_vertical_node;
 @property IBOutlet id graph_column;
@@ -844,6 +844,7 @@
 -(IBAction) window_did_load;
 -(IBAction) graph_row_count;
 -(IBAction) graph_cell:(id) row;
+-(IBAction) graph_column_size:(id) width;
 -(IBAction) working_branches_row_count;
 -(IBAction) working_branches_cell:(id) row;
 
@@ -892,7 +893,7 @@
 
 
 -(IBAction) view:(id) identifier;
--(IBAction) show_by:(id) view;
+-(IBAction) show:(id) view;
 
 @end
 
@@ -957,13 +958,12 @@
 @end
 
 
-@interface NodePopover
+@interface NodePopover: NSPopover
 
 
 
 
 
--(IBAction) initialize:(id) popover_instance;
 -(IBAction) show:(id) sender;
 
 @end

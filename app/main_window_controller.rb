@@ -5,15 +5,12 @@ class MainWindowController < BaseWindowController
 
   outlet :working_branches
   outlet :graph
-  outlet :popover_view
+  outlet :node_popover
   outlet :reusable_horizontal_node
   outlet :reusable_vertical_node
   outlet :graph_column
 
-  attr_accessor :node_popover
-
   def window_did_load
-    self.node_popover = NodePopover.new(popover_view)
 
     @master = Git::Commit.from(:master)
 
