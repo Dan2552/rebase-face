@@ -805,6 +805,43 @@
 @end
 
 
+@interface Branch
+
+
+
+
+
+-(IBAction) initialize:(id) name;
+-(IBAction) to_s;
+
+@end
+
+
+@interface Command
+
+
+
+
+
+-(IBAction) current_directory;
+-(IBAction) log:(id) ref;
+-(IBAction) branch_list;
+-(IBAction) sanitize_name:(id) name;
+
+@end
+
+
+@interface Commit
+
+
+
+
+
+-(IBAction) gravatar;
+
+@end
+
+
 @interface Rebase
 
 
@@ -834,10 +871,13 @@
 
 @property IBOutlet id working_branches;
 @property IBOutlet id graph;
-@property IBOutlet id node_popover;
 @property IBOutlet id reusable_horizontal_node;
 @property IBOutlet id reusable_vertical_node;
 @property IBOutlet id graph_column;
+@property IBOutlet id branch_search;
+@property IBOutlet id branch_search_field;
+@property IBOutlet id node_popover;
+@property IBOutlet id choose_branch_popover;
 
 
 
@@ -847,6 +887,12 @@
 -(IBAction) graph_column_size:(id) width;
 -(IBAction) working_branches_row_count;
 -(IBAction) working_branches_cell:(id) row;
+-(IBAction) branches;
+-(IBAction) branch_search_row_count;
+-(IBAction) branch_search_cell:(id) row;
+-(IBAction) show_branch_popover:(id) sender;
+-(IBAction) branch_text_change:(id) sender;
+-(IBAction) select_branch;
 
 @end
 
@@ -929,6 +975,17 @@
 -(IBAction) find:(id) identifier;
 -(IBAction) auto_arrange_subviews;
 -(IBAction) left;
+
+@end
+
+
+@interface ChooseBranchPopover: NSPopover
+
+
+
+
+
+-(IBAction) show:(id) sender;
 
 @end
 

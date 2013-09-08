@@ -44,4 +44,8 @@ class NSView
     frame.size.width
   end
 
+  def visible= visible
+    self.hidden = !visible
+  end
+
 end

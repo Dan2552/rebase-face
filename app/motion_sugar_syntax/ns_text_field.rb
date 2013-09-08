@@ -5,7 +5,7 @@ class NSTextField
   end
 
   def text= text
-    self.stringValue = text
+    self.stringValue = text.to_s
   end
 
 end

@@ -9,6 +9,7 @@ class CommitNode < NSView
 
   def commit= commit
     find(:node_text).text = commit.name
+    find(:avatar).setImageWithURL(commit.gravatar, customCacheKey:commit.email)
     find(:node_view).commit = commit
   end
 

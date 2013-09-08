@@ -273,6 +273,21 @@
 @end
 
 
+@implementation Branch
+
+@end
+
+
+@implementation Command
+
+@end
+
+
+@implementation Commit
+
+@end
+
+
 @implementation Rebase
 
 @end
@@ -314,6 +329,11 @@
 
 
 @implementation NSView
+
+@end
+
+
+@implementation ChooseBranchPopover
 
 @end
 

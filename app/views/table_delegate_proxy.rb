@@ -22,4 +22,8 @@ class TableDelegateProxy
     @table_view.dataSource = self
   end
 
+  def tableViewSelectionDidChange(notification)
+    @delegate.send("#{@name}_selected_row".to_sym, notification.object.selectedRow)
+  end
+
 end

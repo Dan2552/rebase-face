@@ -39,3 +39,5 @@ nbproject
 *.001
 
 *.xcuserstate
+
+vendor/

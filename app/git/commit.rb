@@ -3,7 +3,7 @@ module Git
     include MotionModel::Model
     include MotionModel::ArrayModelAdapter
 
-    columns :sha, :name, :position, :action
+    columns :email, :sha, :name, :position, :action
 
     def before? commit
       position > commit.position
@@ -22,16 +22,16 @@ module Git
     end
 
     def self.from(reference=:master)
-      reference = sanitize_name(reference)
       commits = []
 
       index = 0
-      `cd #{Git::PROJECT_PATH} && git log #{reference} --oneline`.each_line do |line|
-        split = line.strip.split(" ", 2)
+      Command.new.log(reference).each_line do |line|
+        split = line.strip.split("//!//", 3)
 
         c = Git::Commit.new(
-          sha: split[0],
-          name: split[1],
+          email: split[0],
+          sha: split[1],
+          name: split[2],
           position: index + 1
         )
 
@@ -42,10 +42,9 @@ module Git
       commits
     end
 
-    private
-
-    def self.sanitize_name name
-      name.gsub(" ", "-")
+    def gravatar
+      hash = email.downcase.MD5_digest
+      "http://www.gravatar.com/avatar/#{hash}?d=mm"
     end
 
   end

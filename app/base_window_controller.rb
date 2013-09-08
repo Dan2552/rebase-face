@@ -39,12 +39,14 @@ class BaseWindowController < NSWindowController
   def register_buttons
     cls = self.class
     cls.hash_settings.each do |key, value|
-      button_id = key.split("#{cls.name}_click_").last.to_i
-      if button_id > 0
-        view = window.contentView.viewWithTag(button_id)
-        if view.respond_to? :register_click_action
-          view.register_click_action(self, value)
-        end
+      next unless key.start_with? "#{cls.name}_click_"
+      button_id = key.split("#{cls.name}_click_").last.to_sym
+      view = window.contentView.find(button_id)
+
+      if view.respond_to? :register_click_action
+        view.register_click_action(self, value)
+      else
+        raise "invalid button #{button_id}"
       end
     end
   end

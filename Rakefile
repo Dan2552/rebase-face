@@ -8,4 +8,10 @@ Bundler.require
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'RebaseFace'
+
+  app.pods do
+    pod 'MD5Digest'
+    pod 'GBImageView'
+  end
+
 end
