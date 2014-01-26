@@ -892,7 +892,7 @@
 -(IBAction) branch_search_cell:(id) row;
 -(IBAction) show_branch_popover:(id) sender;
 -(IBAction) branch_text_change:(id) sender;
--(IBAction) select_branch;
+-(IBAction) branch_search_selected_row:(id) row;
 
 @end
 
@@ -1034,6 +1034,7 @@
 
 -(IBAction) numberOfRowsInTableView:(id) table_view;
 -(IBAction) connect_delegation;
+-(IBAction) tableViewSelectionDidChange:(id) notification;
 
 @end
 
