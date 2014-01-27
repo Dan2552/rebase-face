@@ -1004,6 +1004,18 @@
 @end
 
 
+@interface ContentInsetTableHeaderView: NSTableHeaderView
+
+
+
+
+
+-(IBAction) drawRect:(id) rect;
+-(IBAction) headerRectOfColumn:(id) column;
+
+@end
+
+
 @interface NodeButton: NSButton
 
 

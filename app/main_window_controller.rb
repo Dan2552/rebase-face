@@ -23,7 +23,7 @@ class MainWindowController < BaseWindowController
     @master = Git::Commit.from(:master)
 
     strong TableDelegateProxy.new(self, working_branches, :working_branches)
-    strong TableDelegateProxy.new(self, graph, :graph)
+    strong TableDelegateProxy.new(self, graph, :graph, 25)
     strong TableDelegateProxy.new(self, branch_search, :branch_search)
   end
 
