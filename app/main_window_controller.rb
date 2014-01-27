@@ -19,12 +19,13 @@ class MainWindowController < BaseWindowController
   outlet :choose_branch_popover
 
   def window_did_load
-
     @master = Git::Commit.from(:master)
 
     strong TableDelegateProxy.new(self, working_branches, :working_branches)
     strong TableDelegateProxy.new(self, graph, :graph, 25)
     strong TableDelegateProxy.new(self, branch_search, :branch_search)
+
+    refresh_branches
   end
 
   def graph_row_count
@@ -40,28 +41,30 @@ class MainWindowController < BaseWindowController
     )
 
     horizontal_nodes = nil
-    # if row == 0 || row == 3 || row == 4
-    #   horizontal_nodes = @master[0..row*2].map do |commit|
-    #     reusable_horizontal_node.reuse(
-    #       commit: commit,
-    #       popover: node_popover
-    #     )
-    #   end
-    # end
+    if row == 1 || row == 3 || row == 5
+      horizontal_nodes = @master[0..33].map do |commit|
+        reusable_horizontal_node.reuse(
+          commit: commit,
+          popover: node_popover
+        )
+      end
+    end
 
     views = [vertical_node, horizontal_nodes].flatten.compact
     cell.set_subviews views
 
-    width = cell.auto_arrange_subviews
-    graph_column_size(width)
+    cell.auto_arrange_subviews
 
     cell
   end
 
-  def graph_column_size(width)
-    if width > graph_column.width
-      graph_column.width = width
-    end
+  # def graph_column_size(width)
+  #   if width > graph_column.width
+  #     graph_column.width = width
+  #   end
+  # end
+
+  def graph_selected_row(row)
   end
 
   def working_branches_row_count
@@ -103,8 +106,23 @@ class MainWindowController < BaseWindowController
 
   def branch_search_selected_row row
     SelectedBranches.toggle branches[row]
+    refresh_branches
+  end
+
+  def refresh_branches
     branch_search.reload_data
     working_branches.reload_data
+
+
+    graph.reload_data
+    calculate_graph_width
+  end
+
+  def calculate_graph_width
+    vert = reusable_vertical_node.frame.size.width
+    hor = reusable_horizontal_node.frame.size.width * 35
+    #TODO: find longest horizontal graph / longest branch since base
+    graph_column.width = vert + hor
   end
 
 end
