@@ -29,5 +29,17 @@ module Git
       name.start_with?(terms)
     end
 
+    def head
+      commits.first
+    end
+
+    def commits
+      Commit.from(self.name)
+    end
+
+    def merge_base(branch)
+      Commit.from(Command.new.merge_base(self, branch)).first
+    end
+
   end
 end

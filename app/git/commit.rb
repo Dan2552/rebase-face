@@ -18,9 +18,12 @@ module Git
     end
 
     def self.range(start, finish)
+      start = start.sha if start.respond_to? :sha
+      finish = finish.sha if finish.respond_to? :sha
       from("#{start}..#{finish}")
     end
 
+    #Commit objects from git log
     def self.from(reference=:master)
       commits = []
 

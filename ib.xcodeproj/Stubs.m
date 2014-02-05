@@ -343,11 +343,6 @@
 @end
 
 
-@implementation ContentInsetTableHeaderView
-
-@end
-
-
 @implementation NodeButton
 
 @end

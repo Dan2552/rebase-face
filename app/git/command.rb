@@ -7,17 +7,25 @@ module Git
 
     def log(ref)
       ref = sanitize_name(ref)
-      `#{current_directory} git log #{ref} --pretty=format:"%ae//!//%h//!//%s"`
+      command("git log #{ref} --pretty=format:\"%ae//!//%h//!//%s\"")
     end
 
     def branch_list
-      `#{current_directory} git for-each-ref --sort=-committerdate refs/heads/`
+      command('git for-each-ref --sort=-committerdate refs/heads/')
+    end
+
+    def merge_base(x, y)
+      command("git merge-base #{sanitize_name(x)} #{sanitize_name(y)}").lines.first.gsub("\n", "")
+    end
+
+    def command command
+      `#{current_directory} #{command}`
     end
 
     private
 
     def sanitize_name name
-      name.gsub(" ", "-")
+      name.to_s.gsub(" ", "-").gsub("\n", "")
     end
 
   end

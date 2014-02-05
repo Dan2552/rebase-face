@@ -884,7 +884,7 @@
 -(IBAction) window_did_load;
 -(IBAction) graph_row_count;
 -(IBAction) graph_cell:(id) row;
--(IBAction) graph_column_size:(id) width;
+-(IBAction) graph_selected_row:(id) row;
 -(IBAction) working_branches_row_count;
 -(IBAction) working_branches_cell:(id) row;
 -(IBAction) branches;
@@ -893,6 +893,8 @@
 -(IBAction) show_branch_popover:(id) sender;
 -(IBAction) branch_text_change:(id) sender;
 -(IBAction) branch_search_selected_row:(id) row;
+-(IBAction) refresh_branches;
+-(IBAction) calculate_graph_width;
 
 @end
 
@@ -1000,18 +1002,6 @@
 -(IBAction) commit;
 -(IBAction) popover;
 -(IBAction) node_view;
-
-@end
-
-
-@interface ContentInsetTableHeaderView: NSTableHeaderView
-
-
-
-
-
--(IBAction) drawRect:(id) rect;
--(IBAction) headerRectOfColumn:(id) column;
 
 @end
 

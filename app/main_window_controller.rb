@@ -18,9 +18,14 @@ class MainWindowController < BaseWindowController
   outlet :node_popover
   outlet :choose_branch_popover
 
-  def window_did_load
-    @master = Git::Commit.from(:master)
+  attr_accessor :vertical_node_data
 
+  def base_branch
+    #TODO: change to attr
+    Git::Branch.new(:master)
+  end
+
+  def window_did_load
     strong TableDelegateProxy.new(self, working_branches, :working_branches)
     strong TableDelegateProxy.new(self, graph, :graph, 25)
     strong TableDelegateProxy.new(self, branch_search, :branch_search)
@@ -29,25 +34,24 @@ class MainWindowController < BaseWindowController
   end
 
   def graph_row_count
-    @master.count
+    data = vertical_node_data || []
+    data.count
   end
 
   def graph_cell(row)
     cell = graph.make_view :graph_row
 
     vertical_node = reusable_vertical_node.reuse(
-      commit: @master[row],
+      commit: vertical_node_data[row][:commit],
       popover: node_popover
     )
 
-    horizontal_nodes = nil
-    if row == 1 || row == 3 || row == 5
-      horizontal_nodes = @master[0..33].map do |commit|
-        reusable_horizontal_node.reuse(
-          commit: commit,
-          popover: node_popover
-        )
-      end
+    horizontal_commits = vertical_node_data[row][:horizontal_commits]
+    horizontal_nodes = horizontal_commits.map do |commit|
+      reusable_horizontal_node.reuse(
+        commit: commit,
+        popover: node_popover
+      )
     end
 
     views = [vertical_node, horizontal_nodes].flatten.compact
@@ -57,12 +61,6 @@ class MainWindowController < BaseWindowController
 
     cell
   end
-
-  # def graph_column_size(width)
-  #   if width > graph_column.width
-  #     graph_column.width = width
-  #   end
-  # end
 
   def graph_selected_row(row)
   end
@@ -113,9 +111,28 @@ class MainWindowController < BaseWindowController
     branch_search.reload_data
     working_branches.reload_data
 
-
+    reload_graph_data
     graph.reload_data
-    calculate_graph_width
+    #calculate_graph_width
+  end
+
+  def reload_graph_data
+    merge_bases = {}
+    SelectedBranches.all.each do |branch|
+      merge_base_commit = branch.merge_base(base_branch)
+      merge_bases[merge_base_commit.sha] = Git::Commit.range(merge_base_commit, branch.head).reverse
+    end
+
+    self.vertical_node_data = Git::Commit.from(:master).map do |commit|
+      horizontal_node_data = []
+      if merge_bases.keys.include? commit.sha
+        horizontal_node_data = merge_bases[commit.sha]
+      end
+      {
+        commit: commit,
+        horizontal_commits: horizontal_node_data
+      }
+    end
   end
 
   def calculate_graph_width

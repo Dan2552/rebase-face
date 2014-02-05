@@ -20,6 +20,10 @@ class SelectedBranches
     selected_branches[index]
   end
 
+  def self.all
+    selected_branches
+  end
+
   private
 
   def self.remove branch
