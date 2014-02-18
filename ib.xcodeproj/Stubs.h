@@ -813,6 +813,9 @@
 
 -(IBAction) initialize:(id) name;
 -(IBAction) to_s;
+-(IBAction) head;
+-(IBAction) commits;
+-(IBAction) merge_base:(id) branch;
 
 @end
 
@@ -826,6 +829,7 @@
 -(IBAction) current_directory;
 -(IBAction) log:(id) ref;
 -(IBAction) branch_list;
+-(IBAction) command:(id) command;
 -(IBAction) sanitize_name:(id) name;
 
 @end
@@ -881,6 +885,7 @@
 
 
 
+-(IBAction) base_branch;
 -(IBAction) window_did_load;
 -(IBAction) graph_row_count;
 -(IBAction) graph_cell:(id) row;
@@ -894,6 +899,7 @@
 -(IBAction) branch_text_change:(id) sender;
 -(IBAction) branch_search_selected_row:(id) row;
 -(IBAction) refresh_branches;
+-(IBAction) reload_graph_data;
 -(IBAction) calculate_graph_width;
 
 @end

@@ -7,6 +7,10 @@ class CommitNode < NSView
     copy
   end
 
+  def row= row
+    self.top = row * height
+  end
+
   def commit= commit
     find(:node_text).text = commit.name
     find(:avatar).setImageWithURL(commit.gravatar, customCacheKey:commit.email)

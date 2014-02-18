@@ -46,12 +46,17 @@ class MainWindowController < BaseWindowController
       popover: node_popover
     )
 
-    horizontal_commits = vertical_node_data[row][:horizontal_commits]
-    horizontal_nodes = horizontal_commits.map do |commit|
-      reusable_horizontal_node.reuse(
-        commit: commit,
-        popover: node_popover
-      )
+    horizontal_branches = vertical_node_data[row][:horizontal_branches]
+    horizontal_nodes = []
+
+    horizontal_branches.each_with_index do |horizontal_commits, index|
+      horizontal_nodes = horizontal_nodes + horizontal_commits.map do |commit|
+        reusable_horizontal_node.reuse(
+          commit: commit,
+          popover: node_popover,
+          row: index #TODO
+        )
+      end
     end
 
     views = [vertical_node, horizontal_nodes].flatten.compact
@@ -120,17 +125,18 @@ class MainWindowController < BaseWindowController
     merge_bases = {}
     SelectedBranches.all.each do |branch|
       merge_base_commit = branch.merge_base(base_branch)
-      merge_bases[merge_base_commit.sha] = Git::Commit.range(merge_base_commit, branch.head).reverse
+      merge_bases[merge_base_commit.sha] ||= []
+      merge_bases[merge_base_commit.sha] << Git::Commit.range(merge_base_commit, branch.head).reverse
     end
 
-    self.vertical_node_data = Git::Commit.from(:master).map do |commit|
+    self.vertical_node_data = base_branch.commits.map do |commit|
       horizontal_node_data = []
       if merge_bases.keys.include? commit.sha
-        horizontal_node_data = merge_bases[commit.sha]
+        merge_bases[commit.sha].each {|branch_off| horizontal_node_data << branch_off }
       end
       {
         commit: commit,
-        horizontal_commits: horizontal_node_data
+        horizontal_branches: horizontal_node_data
       }
     end
   end

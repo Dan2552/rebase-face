@@ -40,8 +40,26 @@ class NSView
     self.frame = new_frame
   end
 
+  def top= y
+    new_frame = self.frame
+    new_frame.origin.y = y
+    self.frame = new_frame
+  end
+
+  def top
+    frame.origin.y
+  end
+
+  def bottom
+    top + height
+  end
+
   def width
     frame.size.width
+  end
+
+  def height
+    frame.size.height
   end
 
   def visible= visible
