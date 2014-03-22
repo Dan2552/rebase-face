@@ -268,6 +268,11 @@
 @end
 
 
+@implementation BaseNode
+
+@end
+
+
 @implementation BaseWindowController
 
 @end

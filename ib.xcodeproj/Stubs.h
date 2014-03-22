@@ -792,6 +792,21 @@
 @end
 
 
+@interface BaseNode
+
+
+
+
+
+-(IBAction) horizontal_rows;
+-(IBAction) add_branch_off:(id) branch_commits;
+-(IBAction) to_view_hierarchy;
+-(IBAction) vertical_view;
+-(IBAction) horizontal_rows_view;
+
+@end
+
+
 @interface BaseWindowController: NSWindowController
 
 
@@ -981,8 +996,11 @@
 
 
 -(IBAction) find:(id) identifier;
+-(IBAction) add_subview_and_resize:(id) subview;
 -(IBAction) auto_arrange_subviews;
 -(IBAction) left;
+-(IBAction) top;
+-(IBAction) bottom;
 
 @end
 

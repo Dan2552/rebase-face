@@ -30,6 +30,9 @@ class MainWindowController < BaseWindowController
     strong TableDelegateProxy.new(self, graph, :graph, 25)
     strong TableDelegateProxy.new(self, branch_search, :branch_search)
 
+    BaseNode.vert_reuse = reusable_vertical_node
+    BaseNode.horiz_reuse = reusable_horizontal_node
+
     refresh_branches
   end
 
@@ -39,32 +42,9 @@ class MainWindowController < BaseWindowController
   end
 
   def graph_cell(row)
-    cell = graph.make_view :graph_row
-
-    vertical_node = reusable_vertical_node.reuse(
-      commit: vertical_node_data[row][:commit],
-      popover: node_popover
-    )
-
-    horizontal_branches = vertical_node_data[row][:horizontal_branches]
-    horizontal_nodes = []
-
-    horizontal_branches.each_with_index do |horizontal_commits, index|
-      horizontal_nodes = horizontal_nodes + horizontal_commits.map do |commit|
-        reusable_horizontal_node.reuse(
-          commit: commit,
-          popover: node_popover,
-          row: index #TODO
-        )
-      end
+    graph.make_view(:graph_row).tap do |cell|
+      cell.set_subviews [vertical_node_data[row]]
     end
-
-    views = [vertical_node, horizontal_nodes].flatten.compact
-    cell.set_subviews views
-
-    cell.auto_arrange_subviews
-
-    cell
   end
 
   def graph_selected_row(row)
@@ -125,20 +105,23 @@ class MainWindowController < BaseWindowController
     merge_bases = {}
     SelectedBranches.all.each do |branch|
       merge_base_commit = branch.merge_base(base_branch)
+
       merge_bases[merge_base_commit.sha] ||= []
       merge_bases[merge_base_commit.sha] << Git::Commit.range(merge_base_commit, branch.head).reverse
     end
 
-    self.vertical_node_data = base_branch.commits.map do |commit|
-      horizontal_node_data = []
-      if merge_bases.keys.include? commit.sha
-        merge_bases[commit.sha].each {|branch_off| horizontal_node_data << branch_off }
-      end
-      {
-        commit: commit,
-        horizontal_branches: horizontal_node_data
-      }
+    nodes = base_branch.commits.map do |commit|
+      base = BaseNode.new
+      base.commit = commit
+      base.popover = node_popover
+
+      (merge_bases[commit.sha] || []).each { |b| base.add_branch_off(b) }
+      base
     end
+
+    #debug({ vc: self, nodes: nodes })
+
+    self.vertical_node_data = nodes.map(&:to_view_hierarchy)
   end
 
   def calculate_graph_width
